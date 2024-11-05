@@ -55,7 +55,7 @@ def DBSCAN_clust(data, k=4):
     rand = adjusted_rand_score(data['Résultat'], labels)
 
     print("Le score de DB est :", DB)
-    print("Le score de silhouette est :", DB)
+    print("Le score de silhouette est :", sil)
     print("Le score de Rand est :", rand)
     return [sil, rand, DB]
 

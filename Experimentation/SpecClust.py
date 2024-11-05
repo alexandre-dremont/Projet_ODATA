@@ -46,7 +46,7 @@ def specClust(data, nb_cluster, matrix, sigma=1.0, KNN=10):
     rand = adjusted_rand_score(data['Résultat'], labels)
 
     print("Le score de DB est :", DB)
-    print("Le score de silhouette est :", DB)
+    print("Le score de silhouette est :", sil)
     print("Le score de Rand est :", rand)
     return [sil, rand, DB]
 
