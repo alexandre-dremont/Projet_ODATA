@@ -35,29 +35,30 @@ def k_means(X, n_clusters, init = 'k-means++', n_init=20, max_iter=100):
     # print(kmeans.score(X.drop(columns=["Résultat"]),X["Résultat"]))
 
     # Affichage des données
-    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+    # fig, ax = plt.subplots(1, 2, figsize=(12, 5))
 
-    # Clusters obtenus avec l'algorithme
-    ax[0].scatter(X.iloc[:, 0], X.iloc[:, 1], c=labels)
-    ax[0].set_title('Clusters K-means')
-    ax[0].set_xlabel('1ère caractéristique')
-    ax[0].set_ylabel('2ème caractéristique')
-    ax[0].grid(True)
+    # # Clusters obtenus avec l'algorithme
+    # ax[0].scatter(X.iloc[:, 0], X.iloc[:, 1], c=labels)
+    # ax[0].set_title('Clusters K-means')
+    # ax[0].set_xlabel('1ère caractéristique')
+    # ax[0].set_ylabel('2ème caractéristique')
+    # ax[0].grid(True)
 
-    # Résultats attendus
-    ax[1].scatter(X.iloc[:, 0], X.iloc[:, 1], c=X.iloc[:,2])
-    ax[1].set_title('Clusters réels')
-    ax[1].set_xlabel('1ère caractéristique')
-    ax[1].set_ylabel('2ème caractéristique')
-    ax[1].grid(True)
+    # # Résultats attendus
+    # ax[1].scatter(X.iloc[:, 0], X.iloc[:, 1], c=X.iloc[:,2])
+    # ax[1].set_title('Clusters réels')
+    # ax[1].set_xlabel('1ère caractéristique')
+    # ax[1].set_ylabel('2ème caractéristique')
+    # ax[1].grid(True)
 
-    plt.show()
+    # plt.show()
 
     return kmeans.inertia_, labels, end_time-start_time
 
 # print(k_means(jain, 2))
 # print(k_means(aggregation, 4))
-# print(k_means(pathbased, 6))
+print(k_means(pathbased, 3))
+
 
 def choix_K(X):
     # Deux façons de justifier le K optimal : tracer le coefficient de silhouette ou l'indice de rand en fonction de k ou tracer l'inertie 
