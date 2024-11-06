@@ -5,6 +5,10 @@ from pandas.plotting import scatter_matrix
 from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
 import plotly.express as px
+from  DBSCAN import DBSCAN_clust
+from sklearn.preprocessing import MinMaxScaler
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # 2.1 Examen des données 
 
@@ -85,36 +89,39 @@ Z=scaler.fit_transform(X)
 
 # 2.3 Visualisation t-SNE
 
-variable_to_color = 'total_fertility'
+variable_to_color = 'life_expectation'
 
-# Appliquer t-SNE
-tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
+# # Appliquer t-SNE
+# tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
+# Z_tsne = tsne.fit_transform(Z)
+
+# # Créer un DataFrame pour la visualisation avec Plotly
+# tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
+# tsne_df['Country'] = index
+# tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
+
+# # Visualisation interactive avec Plotly
+# fig = px.scatter(
+#     tsne_df, 
+#     x='TSNE1', 
+#     y='TSNE2', 
+#     hover_name='Country',  # Noms des pays affichés au survol
+#     title='Visualisation t-SNE du jeu de données',
+#     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'Variable': variable_to_color},  # Étiquettes des axes
+#     width=800, height=600,
+#     color='Variable',  # Utiliser la variable pour la coloration
+#     color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
+# )
+
+# # Afficher le graphique interactif
+# fig.show()
+
+# Appliquer t-SNE en 3D
+tsne = TSNE(n_components=3, perplexity=30, n_iter=1000, random_state=42)
 Z_tsne = tsne.fit_transform(Z)
 
-# Créer un DataFrame pour la visualisation avec Plotly
-tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
-tsne_df['Country'] = index
-tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
-
-# Visualisation interactive avec Plotly
-fig = px.scatter(
-    tsne_df, 
-    x='TSNE1', 
-    y='TSNE2', 
-    hover_name='Country',  # Noms des pays affichés au survol
-    title='Visualisation t-SNE du jeu de données',
-    labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'Variable': variable_to_color},  # Étiquettes des axes
-    width=800, height=600,
-    color='Variable',  # Utiliser la variable pour la coloration
-    color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
-)
-
-# Afficher le graphique interactif
-fig.show()
-
-# # Appliquer t-SNE en 3D
-# tsne = TSNE(n_components=3, perplexity=30, n_iter=1000, random_state=42)
-# Z_tsne = tsne.fit_transform(Z)
+clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2)
+print(clusters_DBSCAN)
 
 # # Créer un DataFrame pour la visualisation avec Plotly
 # tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
@@ -132,8 +139,87 @@ fig.show()
 #     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3', 'Variable': variable_to_color},  # Étiquettes des axes
 #     width=800, height=800,
 #     color='Variable',  # Utiliser la variable pour la coloration
-#     color_continuous_scale='viridis'  # Utilisez 'viridis' ou autre colormap si nécessaire
+#     color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
 # )
 
 # # Afficher le graphique interactif
 # fig.show()
+
+def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation t-SNE 3D des clusters"):
+    """
+    Affiche une visualisation 3D des données projetées et une légende mosaïque avec les pays groupés par clusters.
+
+    Paramètres:
+    -----------
+    data_3d : array-like
+        Tableau numpy ou DataFrame contenant les données projetées en 3D (e.g., résultats de t-SNE).
+    clusters : list ou array
+        Liste ou tableau des identifiants de cluster pour chaque point de données.
+    labels : list
+        Liste des noms des points (par exemple, des pays), pour afficher au survol.
+    title : str, optional
+        Titre du graphique.
+
+    Retour:
+    -------
+    Affiche le graphique interactif 3D avec la légende des clusters.
+    """
+    # Création d'un DataFrame pour la visualisation
+    tsne_df = pd.DataFrame(data_3d, columns=['TSNE1', 'TSNE2', 'TSNE3'])
+    tsne_df['Cluster'] = clusters.astype(str)  # Convertir en chaîne pour la couleur catégorielle
+    tsne_df['Country'] = labels
+
+    # Graphique 3D avec clusters
+    fig_3d = px.scatter_3d(
+        tsne_df, 
+        x='TSNE1', 
+        y='TSNE2', 
+        z='TSNE3',
+        hover_name='Country',
+        color='Cluster',
+        title=title,
+        labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3'},
+        width=800, height=800
+    )
+
+    # Créer un DataFrame groupé par cluster pour la légende
+    clusters_dict = tsne_df.groupby('Cluster')['Country'].apply(list).to_dict()
+    
+    # Formatage de la légende pour chaque cluster
+    table_data = []
+    for cluster, countries in clusters_dict.items():
+        table_data.append(
+            [f"Cluster {cluster}", ", ".join(countries)]
+        )
+
+    # Créer une sous-figure avec le graphe 3D et la légende
+    fig = make_subplots(
+        rows=1, cols=2,
+        column_widths=[0.7, 0.3],
+        specs=[[{"type": "scatter3d"}, {"type": "table"}]]
+    )
+
+    # Ajouter le graphique 3D
+    for trace in fig_3d.data:
+        fig.add_trace(trace, row=1, col=1)
+
+    # Ajouter la table avec les clusters et pays
+    fig.add_trace(
+        go.Table(
+            header=dict(values=["Cluster", "Pays"], align='left', font=dict(size=12)),
+            cells=dict(values=list(zip(*table_data)), align='left')
+        ),
+        row=1, col=2
+    )
+
+    # Afficher le graphique complet
+    fig.update_layout(
+        title=title,
+        showlegend=False,
+        width=1200,
+        height=800
+    )
+    
+    fig.show()
+
+plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
