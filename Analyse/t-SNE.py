@@ -9,6 +9,8 @@ from  DBSCAN import DBSCAN_clust
 from sklearn.preprocessing import MinMaxScaler
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from SpecClust import specClust
+from CAH import CAH
 
 # 2.1 Examen des données 
 
@@ -120,8 +122,10 @@ variable_to_color = 'life_expectation'
 tsne = TSNE(n_components=3, perplexity=30, n_iter=1000, random_state=42)
 Z_tsne = tsne.fit_transform(Z)
 
-clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2)
-print(clusters_DBSCAN)
+clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2) # Trouver le meilleur k
+clusters_spec=specClust(Z_tsne, 6, matrix='nearest_neighbors', KNN=5) # Trouver le meilleur k
+clusters_asc_hier=CAH(Z_tsne, 'ward', 5, 'maxclust') # Trouver le bon seuil t
+print(clusters_asc_hier)
 
 # # Créer un DataFrame pour la visualisation avec Plotly
 # tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
@@ -222,4 +226,5 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     
     fig.show()
 
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
+# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
+plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_asc_hier, labels=index)
