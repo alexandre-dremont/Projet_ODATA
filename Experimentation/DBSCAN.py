@@ -23,7 +23,7 @@ def DBSCAN_clust(data, k=4):
     k_distances = np.sort(distances[:, k-1])[::-1]
     epsilon = k_distances[np.argmax(np.diff(k_distances))]
 
-    # Etrainement du modèle 
+    # Entrainement du modèle 
     density=DBSCAN(eps=1.12*epsilon, min_samples=2*len(data.to_numpy()[:,:-1][0]))
     labels=density.fit_predict(data)
 

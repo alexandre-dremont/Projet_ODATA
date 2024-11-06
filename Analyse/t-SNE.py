@@ -106,7 +106,7 @@ fig = px.scatter(
     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'Variable': variable_to_color},  # Étiquettes des axes
     width=800, height=600,
     color='Variable',  # Utiliser la variable pour la coloration
-    color_continuous_scale='viridis'  # Utilisez 'viridis' ou autre colormap si nécessaire
+    color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
 )
 
 # Afficher le graphique interactif
