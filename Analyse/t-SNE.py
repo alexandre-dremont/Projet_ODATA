@@ -11,6 +11,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from SpecClust import specClust
 from CAH import CAH
+from GMM import GMM
+from kmeans import k_means
 
 # 2.1 Examen des données 
 
@@ -124,11 +126,14 @@ Z_tsne = tsne.fit_transform(Z)
 
 # clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2) # Le meilleur k est 2 après avoir essayé toutes les possibilités
 # clusters_spec=specClust(Z_tsne, 8, matrix='nearest_neighbors', KNN=4) # KNN dans [3, 4, 5, 6, 7] avec max à 4 puis 6 et k=3, 8, 7, 4, 5, 6
-# clusters_asc_hier=CAH(Z_tsne, 'ward', 4, 'maxclust') # Trouver le bon seuil t=2,3,4
-clusters_cah=clusters_asc_hier=CAH(Z_tsne, 'ward', 250, 'distance')
+# clusters_asc_hier=CAH(Z_tsne, 'ward', 4, 'maxclust') # Trouver le bon seuil t=3,4
+# clusters_cah=clusters_asc_hier=CAH(Z_tsne, 'ward', 250, 'distance')
+# clusters_GMM=GMM(Z_tsne, 11, 'full', 10, 100)[0] # k = 6, 3, 11, 5
+# clusters_kmeans=k_means(Z_tsne, 4, "k-means++", 10, 'lloyd', 100)[1] k=3, 4, 5, 6, 11, 8
 
-# for k in range (2700, 2800, 5):
+# for k in range (2, 12):
 #     print (f'\n Pour k={k}, voici les scores :')
+#     clusters_kmeans=k_means(Z_tsne, k, "k-means++", 10, 'lloyd', 100)[1]
 
 # # Créer un DataFrame pour la visualisation avec Plotly
 # tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
@@ -196,7 +201,7 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     table_data = []
     for cluster, countries in clusters_dict.items():
         table_data.append(
-            [f"Cluster {cluster}", ", ".join(countries)]
+            [f"Cluster {cluster} "+"\n"+f"Effectif={len(countries)}", ", ".join(countries)]
         )
 
     # Créer une sous-figure avec le graphe 3D et la légende
@@ -230,4 +235,4 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     fig.show()
 
 # plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_cah, labels=index)
+# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_GMM, labels=index)
