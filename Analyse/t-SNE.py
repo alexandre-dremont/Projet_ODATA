@@ -17,9 +17,9 @@ from CAH import CAH
 dataset = pd.read_csv("./data/data.csv", index_col=0)
 # print(dataset)
 # print(dataset.info())
-print(dataset.describe())
+# print(dataset.describe())
 # print(dataset.shape)
-print(dataset.head())
+# print(dataset.head())
 # print(dataset.columns)
 index=dataset.index
 
@@ -122,10 +122,13 @@ variable_to_color = 'life_expectation'
 tsne = TSNE(n_components=3, perplexity=30, n_iter=1000, random_state=42)
 Z_tsne = tsne.fit_transform(Z)
 
-clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2) # Trouver le meilleur k
-clusters_spec=specClust(Z_tsne, 6, matrix='nearest_neighbors', KNN=5) # Trouver le meilleur k
-clusters_asc_hier=CAH(Z_tsne, 'ward', 5, 'maxclust') # Trouver le bon seuil t
-print(clusters_asc_hier)
+# clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2) # Le meilleur k est 2 après avoir essayé toutes les possibilités
+# clusters_spec=specClust(Z_tsne, 8, matrix='nearest_neighbors', KNN=4) # KNN dans [3, 4, 5, 6, 7] avec max à 4 puis 6 et k=3, 8, 7, 4, 5, 6
+# clusters_asc_hier=CAH(Z_tsne, 'ward', 4, 'maxclust') # Trouver le bon seuil t=2,3,4
+clusters_cah=clusters_asc_hier=CAH(Z_tsne, 'ward', 250, 'distance')
+
+# for k in range (2700, 2800, 5):
+#     print (f'\n Pour k={k}, voici les scores :')
 
 # # Créer un DataFrame pour la visualisation avec Plotly
 # tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
@@ -227,4 +230,4 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     fig.show()
 
 # plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_asc_hier, labels=index)
+plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_cah, labels=index)
