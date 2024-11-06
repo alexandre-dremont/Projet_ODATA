@@ -47,7 +47,7 @@ dataset = pd.read_csv("./data/data.csv", index_col=0)
 # print(dataset.info())
 print(dataset.describe())
 # print(dataset.shape)
-print(dataset.head())
+# print(dataset.head())
 # print(dataset.columns)
 index=dataset.index
 
@@ -62,17 +62,14 @@ index=dataset.index
 # print(dataset.isnull().sum()) # Il manque deux valeurs dans les colonnes "total_fertility" et "GDP"
 # print(dataset.isna().sum())
 
-# Le taux de fertilité n'a pas été renseigné en France et au Niger et le PIB en Italie et en Norvège
+# Le taux de fécondité n'a pas été renseigné en France et au Niger et le PIB par habitant en Italie et en Norvège
 
 # print(dataset.isna().sum(axis=1))
 # Nombre total de valeurs manquantes
 # print(dataset.isnull().sum().sum())
 
 
-# dataset.hist()
-# plt.show()
-
-# print(dataset[dataset["child_mortality"]>130])
+# print(dataset[dataset["child_mortality"]>100])
 # Corriger le taux de mortalité infantile pour Haïti (57 pour 1000), Sierra Leone (101), Tchad (103)
 
 # print(dataset[dataset["exports"]<5])
@@ -84,7 +81,7 @@ index=dataset.index
 # print(dataset[dataset["imports"]<15])
 # Myanmar à nouveau, le Japon et le Brésil importent peu
 
-# print(dataset[dataset["income"]>75000])
+# print(dataset[dataset["income"]>60000])
 # Salaire moyen au Qatar aberrant (125000 contre )
 
 # print(dataset[dataset["inflation"]>25])
@@ -93,12 +90,15 @@ index=dataset.index
 # print(dataset[dataset["life_expectation"]<50])
 # On corrige les espérances de vie du Bangladesh (0 contre réellement 62.5) et d'Haïti (32.1 contre réellement 63.2) par pro-rata
 
-# print(dataset[dataset["GDP"]>75000])
+print(dataset[dataset["GDP"]>75000])
 # PIB par habitant de l'Australie, de la Grande Bretagne et des Etats-Unis à corriger
 
 # salaire et PIB par habitant corrélés positivement ?
 # imports et exports corrélés positivement ?
 # mortalité infantile et santé ou espérance de vie corrélés négativement ?
+
+# dataset.hist()
+# plt.show()
 
 # 2.2 Pré-traitement des données
 
@@ -114,7 +114,7 @@ pca.fit(Z)
 # print(np.var(Z))
 # print(Z)
 
-print(dataset.corr())
+# print(dataset.corr())
 
-pd.plotting.scatter_matrix(frame=dataset)
-plt.show()
+# pd.plotting.scatter_matrix(frame=dataset)
+# plt.show()
