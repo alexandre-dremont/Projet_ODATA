@@ -28,6 +28,8 @@ def GMM(X, n_components, covariance_type, n_init = 10, max_iter=1000):
     # print(gm.n_features_in_)
     # print(gm.feature_names_in_)
     # print(gm.predict([[0, 0], [12, 3]]))
+    # print(gm.bic(X))
+    # print(gm.aic(X))
 
     P=gm.predict_proba(X.drop(columns=["Résultat"]))
     # print(gm.aic(X))
@@ -61,7 +63,7 @@ def GMM(X, n_components, covariance_type, n_init = 10, max_iter=1000):
 
     return labels_predicted, end_time-start_time
 
-# GMM(jain, 2, 'full')
+GMM(jain, 2, 'full')
 # GMM(jain, 2, 'tied')
 # GMM(jain, 2, 'diag')
 # GMM(jain, 2, 'spherical')
