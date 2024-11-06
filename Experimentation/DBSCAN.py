@@ -8,13 +8,10 @@ from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldi
 # Récupération des données
 
 jain=pd.read_csv("./data/jain.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
-
 aggregation=pd.read_csv("./data/aggregation.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
-
 pathbased=pd.read_csv("./data/pathbased.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
 
 # Fonction de DBSCAN
-
 def DBSCAN_clust(data, k=4):
 
     # Conversion des données

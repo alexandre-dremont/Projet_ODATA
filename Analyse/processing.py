@@ -48,7 +48,7 @@ dataset = pd.read_csv("./data/data.csv", index_col=0)
 print(dataset.describe())
 # print(dataset.shape)
 print(dataset.head())
-# print(dataset.columns)
+print(dataset.columns)
 index=dataset.index
 
 # Que des données de type float sauf le salaire qui est entier et le nom des pays un object (string en l'occurence)
