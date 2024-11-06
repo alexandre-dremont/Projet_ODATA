@@ -4,15 +4,11 @@ from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldi
 from sklearn.cluster import SpectralClustering
 
 # Récupération des données
-
 jain=pd.read_csv("./data/jain.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
-
 aggregation=pd.read_csv("./data/aggregation.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
-
 pathbased=pd.read_csv("./data/pathbased.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
 
 # Fonction de clustering spectral
-
 def specClust(data, nb_cluster, matrix, sigma=1.0, KNN=10):
     if matrix=='rbf':
         spectre=SpectralClustering(n_clusters=nb_cluster, affinity=matrix, gamma=sigma)
@@ -41,6 +37,7 @@ def specClust(data, nb_cluster, matrix, sigma=1.0, KNN=10):
 
     plt.show()
 
+    # Evaluation des performances
     DB = davies_bouldin_score(data, labels)
     sil = silhouette_score(data, labels, metric='euclidean')
     rand = adjusted_rand_score(data['Résultat'], labels)

@@ -3,9 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pandas.plotting import scatter_matrix
 from sklearn.preprocessing import StandardScaler
-from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
-from sklearn.metrics import silhouette_score, adjusted_rand_score
-from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
 import plotly.express as px
 
@@ -88,47 +85,55 @@ Z=scaler.fit_transform(X)
 
 # 2.3 Visualisation t-SNE
 
-# # Appliquer t-SNE
-# tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
-# Z_tsne = tsne.fit_transform(Z)
+variable_to_color = 'total_fertility'
 
-# # Créer un DataFrame pour la visualisation avec Plotly
-# tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
-# tsne_df['Country'] = index
-
-# # Visualisation interactive avec Plotly
-# fig = px.scatter(
-#     tsne_df, 
-#     x='TSNE1', 
-#     y='TSNE2', 
-#     hover_name='Country',  # Noms des pays affichés au survol
-#     title='Visualisation t-SNE du jeu de données',
-#     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2'},  # Étiquettes des axes
-#     width=800, height=600
-# )
-
-# # Afficher le graphique interactif
-# fig.show()
-
-# Appliquer t-SNE en 3D
-tsne = TSNE(n_components=3, perplexity=30, n_iter=1000, random_state=42)
+# Appliquer t-SNE
+tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
 Z_tsne = tsne.fit_transform(Z)
 
 # Créer un DataFrame pour la visualisation avec Plotly
-tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
-tsne_df['Country'] = index  # Ajouter les noms des pays dans la colonne 'Country'
+tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
+tsne_df['Country'] = index
+tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
 
-# Visualisation interactive 3D avec Plotly
-fig = px.scatter_3d(
+# Visualisation interactive avec Plotly
+fig = px.scatter(
     tsne_df, 
     x='TSNE1', 
     y='TSNE2', 
-    z='TSNE3',  # Troisième dimension pour le 3D
     hover_name='Country',  # Noms des pays affichés au survol
-    title='Visualisation t-SNE 3D du jeu de données',
-    labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3'},  # Étiquettes des axes
-    width=800, height=800
+    title='Visualisation t-SNE du jeu de données',
+    labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'Variable': variable_to_color},  # Étiquettes des axes
+    width=800, height=600,
+    color='Variable',  # Utiliser la variable pour la coloration
+    color_continuous_scale='viridis'  # Utilisez 'viridis' ou autre colormap si nécessaire
 )
 
 # Afficher le graphique interactif
 fig.show()
+
+# # Appliquer t-SNE en 3D
+# tsne = TSNE(n_components=3, perplexity=30, n_iter=1000, random_state=42)
+# Z_tsne = tsne.fit_transform(Z)
+
+# # Créer un DataFrame pour la visualisation avec Plotly
+# tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
+# tsne_df['Country'] = index  # Ajouter les noms des pays dans la colonne 'Country'
+# tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
+
+# # Visualisation interactive 3D avec Plotly
+# fig = px.scatter_3d(
+#     tsne_df, 
+#     x='TSNE1', 
+#     y='TSNE2', 
+#     z='TSNE3',  # Troisième dimension pour le 3D
+#     hover_name='Country',  # Noms des pays affichés au survol
+#     title='Visualisation t-SNE 3D du jeu de données',
+#     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3', 'Variable': variable_to_color},  # Étiquettes des axes
+#     width=800, height=800,
+#     color='Variable',  # Utiliser la variable pour la coloration
+#     color_continuous_scale='viridis'  # Utilisez 'viridis' ou autre colormap si nécessaire
+# )
+
+# # Afficher le graphique interactif
+# fig.show()

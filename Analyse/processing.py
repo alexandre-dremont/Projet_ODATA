@@ -47,7 +47,7 @@ dataset = pd.read_csv("./data/data.csv", index_col=0)
 # print(dataset.info())
 print(dataset.describe())
 # print(dataset.shape)
-# print(dataset.head())
+print(dataset.head())
 # print(dataset.columns)
 index=dataset.index
 
