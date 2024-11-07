@@ -90,7 +90,7 @@ index=dataset.index
 # print(dataset[dataset["life_expectation"]<50])
 # On corrige les espérances de vie du Bangladesh (0 contre réellement 62.5) et d'Haïti (32.1 contre réellement 63.2) par pro-rata
 
-print(dataset[dataset["GDP"]>75000])
+# print(dataset[dataset["GDP"]>75000])
 # PIB par habitant de l'Australie, de la Grande Bretagne et des Etats-Unis à corriger
 
 # salaire et PIB par habitant corrélés positivement ?

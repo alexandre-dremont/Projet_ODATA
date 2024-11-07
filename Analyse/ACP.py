@@ -10,6 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from GMM import GMM, choix_K_gmm
+import seaborn as sns
 
 dataset = pd.read_csv("./data/data.csv", index_col=0)
 
@@ -28,9 +29,44 @@ X=dataset.to_numpy()
 scaler=StandardScaler()
 Z=scaler.fit_transform(X)
 
-# print(dataset.corr())
-# Corrélation positive la plus forte entre le taux de natalité et le taux de mortalité enfantile (0.84) puis entre les imports et les exports (0.73)
-# Corrélation négative la plus forte entre l'espérance de vie et la mortalité enfantile (-0.76) puis entre le taux de natalité et l'espérance de vie (-0.63)
+correlation_matrix=dataset.corr()
+print(correlation_matrix)
+
+## Trouver les valeurs maximale et minimale pour la mise en forme
+max_val = correlation_matrix.to_numpy().max()
+min_val = correlation_matrix.to_numpy().min()
+
+# Affichage de la matrice de corrélation avec Seaborn
+plt.figure(figsize=(8, 6))
+sns.set(font_scale=1)  # Ajuste la taille de la police
+
+# Créer la heatmap avec des annotations et une palette de couleurs personnalisée
+ax = sns.heatmap(
+    correlation_matrix,
+    annot=True,
+    fmt=".2f",
+    cmap="coolwarm",
+    center=0,
+    cbar_kws={'label': 'Valeur de corrélation'},
+    linewidths=0.5,
+    linecolor='gray'
+)
+
+# Appliquer les couleurs spécifiques pour le max et min
+for (i, j), value in np.ndenumerate(correlation_matrix):
+    if value == max_val:
+        ax.text(j + 0.5, i + 0.5, f"{value:.2f}", ha='center', va='center', color="red", fontweight="bold")
+    elif value == min_val:
+        ax.text(j + 0.5, i + 0.5, f"{value:.2f}", ha='center', va='center', color="blue", fontweight="bold")
+
+# Ajouter les étiquettes de titre et ajuster
+ax.set_title("Matrice des Corrélations", fontsize=14, fontweight="bold")
+plt.xticks(rotation=45, ha="right")
+plt.yticks(rotation=0)
+
+# Afficher la figure
+plt.tight_layout()
+plt.show()
 
 # pd.plotting.scatter_matrix(frame=dataset)
 # plt.show()
