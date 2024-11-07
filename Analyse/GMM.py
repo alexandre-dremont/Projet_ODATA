@@ -40,17 +40,17 @@ def GMM(X, n_components, covariance_type, n_init, max_iter):
     return labels_predicted, end_time-start_time
 
 
-def choix_K_gmm(X, covariance_type):
+def choix_K_gmm(X, covariance_type, n_init, max_iter):
     # Deux façons de justifier le K optimal : tracer le coefficient de silhouette ou l'indice de rand en fonction de k ou tracer l'inertie 
     # intra_classe en fonction k et utiliser le critère du "coude"
 
-    K=[2]+[i for i in range(2,10)]
+    K=[2]+[i for i in range(2,20)]
     sil=[]
     # ari=[]
     T=[]
     DB=[]
     for k in K:
-        labels, t = GMM(X, k, covariance_type)
+        labels, t = GMM(X, k, covariance_type, n_init, max_iter)
         sil.append(silhouette_score(X, labels = labels, metric='euclidean'))
         # ari.append(adjusted_rand_score(X["Résultat"] , labels))
         T.append(t)

@@ -11,12 +11,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from GMM import GMM, choix_K_gmm
 import seaborn as sns
+from CAH import CAH
+from DBSCAN import DBSCAN_clust
+from SpecClust import specClust
 
 dataset = pd.read_csv("./data/data.csv", index_col=0)
 
 col=dataset.columns
 
-dataset.drop(["Singapore", "Malta", "Luxembourg"], axis=0, inplace=True)
+dataset.drop(["Singapore", "Malta", "Luxembourg"], axis=0, inplace=True) # Essayer de les projeter dans le nouvel espace
 print(dataset.shape)
 index_data=dataset.index
 print(index_data.shape)
@@ -303,7 +306,7 @@ def affichage():
     # Afficher la figure
     plt.show()
 
-def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation t-SNE 3D des clusters"):
+def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation ACP 3D des clusters"):
     """
     Affiche une visualisation 3D des données projetées et une légende mosaïque avec les pays groupés par clusters.
 
@@ -323,20 +326,20 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     Affiche le graphique interactif 3D avec la légende des clusters.
     """
     # Création d'un DataFrame pour la visualisation
-    tsne_df = pd.DataFrame(data_3d, columns=['TSNE1', 'TSNE2', 'TSNE3'])
+    tsne_df = pd.DataFrame(data_3d, columns=['Axe 1', 'Axe 2', 'Axe 3'])
     tsne_df['Cluster'] = clusters.astype(str)  # Convertir en chaîne pour la couleur catégorielle
     tsne_df['Country'] = labels
 
     # Graphique 3D avec clusters
     fig_3d = px.scatter_3d(
         tsne_df, 
-        x='TSNE1', 
-        y='TSNE2', 
-        z='TSNE3',
+        x='Axe 1', 
+        y='Axe 2', 
+        z='Axe 3',
         hover_name='Country',
         color='Cluster',
         title=title,
-        labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3'},
+        labels={'Axe 1': 'Dimension 1', 'Axe 2': 'Dimension 2', 'Axe 3': 'Dimension 3'},
         width=800, height=800
     )
 
@@ -347,7 +350,7 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     table_data = []
     for cluster, countries in clusters_dict.items():
         table_data.append(
-            [f"Cluster {cluster}", ", ".join(countries)]
+            [f"Cluster {cluster} "+"\n"+f"Effectif={len(countries)}", ", ".join(countries)]
         )
 
     # Créer une sous-figure avec le graphe 3D et la légende
@@ -386,16 +389,57 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
 
 # K-means
 
-_,labels_kmeans,__=k_means(proj[:,:3], 4, "k-means++", 10, 'lloyd', 100)
-# choix_K_kmeans(proj, "k-means++", 10, 'lloyd', 100) # K = 4
+# _,labels_kmeans,__=k_means(proj[:,:3], 11, "k-means++", 10, 'lloyd', 100)
+# choix_K_kmeans(proj, "k-means++", 10, 'lloyd', 100) # K = 7 ou 11
 
-plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_kmeans, labels=index_data)
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_kmeans, labels=index_data) K=11
 
 # print(labels)
 # print(proj[:,:3])
 
+# CAH
+
+# for t in range (70, 134, 2): 
+#     print (f'\n Pour k={t}, voici les scores :')
+#     labels_cah=CAH(proj[:,:3], "ward", t/10, "distance")
+
+# labels_cah=CAH(proj[:,:3], "ward", 8.8, "distance") #k=8.8 ou 13.2
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_cah, labels=index_data)
+
 # GMM
 
-# labels_gmm,_=GMM(proj[:,:3], 4, 'full', 10, 100)
+# labels_gmm,_=GMM(proj[:,:3], 12, 'full', 10, 100)
+# choix_K_gmm(proj[:,:3], 'full', 10, 100) # K = 8 ou 12 
 
-# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_gmm, labels=index_data)
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_gmm, labels=index_data) # K = 8
+
+# DBSCAN
+
+# for k in range (2, 9):
+#     print (f'\n Pour k={k}, voici les scores :')
+#     labels_dbscan=DBSCAN_clust(proj, k)
+
+# k=2
+
+# labels_dbscan=DBSCAN_clust(proj[:,:3], 2) 
+# print(labels_dbscan)
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_dbscan, labels=index_data)
+
+# Clustering Spectral
+
+# for k in range (2, 20):
+#     print (f'\n Pour k={k}, voici les scores :')
+#     labels_dbscan=specClust(proj[:,:3], k, "rbf")
+
+# K = 5 ou 7
+
+# for k in range (2, 20):
+#     print (f'\n Pour k={k}, voici les scores :')
+#     specClust(proj[:,:3], k , matrix='nearest_neighbors', KNN=5)
+
+# labels_cluspec=specClust(proj[:,:3], 16 , matrix='nearest_neighbors', KNN=5) # k=4, 16 ou 18
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_cluspec, labels=index_data)
+
+# K=7
+
+# Calculer les contributions d'une dizaine de pays en besoin aux trois axes

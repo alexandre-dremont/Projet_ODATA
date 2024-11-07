@@ -39,7 +39,7 @@ def choix_K_kmeans(X, init, n_init, algorithm, max_iter):
     # Deux façons de justifier le K optimal : tracer le coefficient de silhouette ou l'indice de rand en fonction de k ou tracer l'inertie 
     # intra_classe en fonction k et utiliser le critère du "coude"
 
-    K=[2]+[i for i in range(2,10)]
+    K=[2]+[i for i in range(2,20)]
     I=[]
     sil=[]
     ari=[]
