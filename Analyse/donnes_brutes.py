@@ -26,13 +26,10 @@ proj = pca.transform(Z)
 
 # K-means
 
-# _,labels_kmeans,__=k_means(Z, 6, "k-means++", 10, 'lloyd', 100)
-# choix_K_kmeans(proj, "k-means++", 10, 'lloyd', 100) # K = 6 ou 15
+# _,labels_kmeans,__=k_means(Z, 21, "k-means++", 10, 'lloyd', 100)
+# choix_K_kmeans(Z, "k-means++", 10, 'lloyd', 100) # K = 16 ou 17 , 21 puis 17
 
-# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_kmeans, labels=index_data) # K=6
-
-# print(labels)
-# print(proj[:,:3])
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_kmeans, labels=index_data) # K=21
 
 # CAH
 
@@ -40,15 +37,15 @@ proj = pca.transform(Z)
 #     print (f'\n Pour k={t}, voici les scores :')
 #     labels_cah=CAH(Z, "ward", t/10, "distance")
 
-# labels_cah=CAH(Z, "ward", 8.8, "distance")
+# labels_cah=CAH(Z, "ward", 21, "maxclust")
 # plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_cah, labels=index_data)
 
 # GMM
 
-# labels_gmm,_= GMM(Z, 11, 'full', 10, 100)
-# choix_K_gmm(Z, 'full', 10, 100) # K = 4, 8 ou 11
+# labels_gmm,_= GMM(Z, 17, 'full', 10, 100)
+# choix_K_gmm(Z, 'full', 10, 100) # K = 8, 15 ou 17
 
-# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_gmm, labels=index_data) # K = 11
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_gmm, labels=index_data) # K = 15
 
 # DBSCAN
 
@@ -56,8 +53,8 @@ proj = pca.transform(Z)
 #     print (f'\n Pour k={k}, voici les scores :')
 #     labels_dbscan=DBSCAN_clust(Z, k)
 
-labels_dbscan=DBSCAN_clust(Z, 5) 
-plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_dbscan, labels=index_data)
+# labels_dbscan=DBSCAN_clust(Z, 5) 
+# plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_dbscan, labels=index_data)
 
 # Clustering Spectral
 
@@ -67,7 +64,7 @@ plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_dbscan, labels=index_da
 
 # for k in range (2, 20):
 #     print (f'\n Pour k={k}, voici les scores :')
-#     specClust(Z, k , matrix='nearest_neighbors', KNN=5)
+#     specClust(Z, k , matrix='nearest_neighbors', KNN=4)
 
-# labels_cluspec=specClust(Z, 16 , matrix='nearest_neighbors', KNN=5)
+# labels_cluspec=specClust(Z, 15 , matrix='nearest_neighbors', KNN=4)
 # plot_clusters_3d_with_legend(proj[:,:3], clusters=labels_cluspec, labels=index_data)

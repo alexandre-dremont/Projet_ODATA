@@ -44,7 +44,7 @@ def choix_K_gmm(X, covariance_type, n_init, max_iter):
     # Deux façons de justifier le K optimal : tracer le coefficient de silhouette ou l'indice de rand en fonction de k ou tracer l'inertie 
     # intra_classe en fonction k et utiliser le critère du "coude"
 
-    K=[2]+[i for i in range(2,20)]
+    K=[1]+[i for i in range(1,25)]
     sil=[]
     # ari=[]
     T=[]
@@ -61,6 +61,11 @@ def choix_K_gmm(X, covariance_type, n_init, max_iter):
     # ari.pop(0)
     T.pop(0)
     DB.pop(0)
+
+    L=np.array([DB[i]-sil[i] for i in range (len(sil))])
+
+    k_opt=L.argsort()
+    print("Les k optimaux classés : ", k_opt)
 
     fig, ax = plt.subplots(1, 2, figsize=(14, 5))
 
