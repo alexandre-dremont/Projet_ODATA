@@ -28,12 +28,13 @@ scaler=StandardScaler(with_std=True)
 Z=scaler.fit_transform(X)
 
 # 2.3 Visualisation t-SNE
+# ['child_mortality', 'exports', 'health', 'imports', 'income', 'inflation', 'life_expectation', 'total_fertility', 'GDP']
 
-variable_to_color = 'life_expectation'
+variable_to_color = 'child_mortality'
 
-# Appliquer t-SNE
-tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
-Z_tsne = tsne.fit_transform(Z)
+# # Appliquer t-SNE
+# tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
+# Z_tsne = tsne.fit_transform(Z)
 
 # Clustering 2D
 
@@ -55,7 +56,7 @@ Z_tsne = tsne.fit_transform(Z)
 
 # for k in range (2, 25):
 #     print (f'\n Pour k={k}, voici les scores :')
-#     CAH(Z, 'ward', k, 'maxclust')
+#     k_means(Z, k, "k-means++", 10, 'lloyd', 100)[1]
 
 # # Créer un DataFrame pour la visualisation avec Plotly
 # tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
@@ -172,11 +173,11 @@ Z_tsne = tsne.fit_transform(Z)
 
 # Données brutes centrées réduites corrigées
 # clusters_DBSCAN=DBSCAN_clust(Z, 8) # Il n'existe pas de k faisant converger l'algorithme de manière pertinente
-clusters_spec=specClust(Z, 15, matrix='nearest_neighbors', KNN=4) # KNN=4 et k=15, 7, 11
-clusters_asc_hier=CAH(Z, 'ward', 21, 'maxclust') # Plus k est bas, mieux c'est ... ou 21, 19
+# clusters_spec=specClust(Z, 15, matrix='nearest_neighbors', KNN=4) # KNN=4 et k=15, 7, 11
+# clusters_asc_hier=CAH(Z, 'ward', 21, 'maxclust') # Plus k est bas, mieux c'est ... ou 21, 19
 # clusters_cah=CAH(Z, 'ward', 250, 'distance')
-clusters_GMM=GMM(Z, 21, 'full', 10, 100)[0] # k = 21, 14, 10, 8
-clusters_kmeans=k_means(Z, 21, "k-means++", 10, 'lloyd', 100)[1] # k=21, 19, 10, 8
+# clusters_GMM=GMM(Z, 21, 'full', 10, 100)[0] # k = 21, 14, 10, 8
+# clusters_kmeans=k_means(Z, 21, "k-means++", 10, 'lloyd', 100)[1] # k=21, 19, 10, 8
 
 # Données passées par t-SNE avant le clustering
 # clusters_DBSCAN=DBSCAN_clust(Z_tsne, 2) # Le meilleur k est 2 après avoir essayé toutes les possibilités
@@ -190,27 +191,27 @@ clusters_kmeans=k_means(Z, 21, "k-means++", 10, 'lloyd', 100)[1] # k=21, 19, 10,
 #     print (f'\n Pour k={k}, voici les scores :')
 #     clusters_kmeans=k_means(Z_tsne, k, "k-means++", 10, 'lloyd', 100)[1]
 
-# # Créer un DataFrame pour la visualisation avec Plotly
-# tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
-# tsne_df['Country'] = index  # Ajouter les noms des pays dans la colonne 'Country'
-# tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
+# Créer un DataFrame pour la visualisation avec Plotly
+tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2', 'TSNE3'])
+tsne_df['Country'] = index  # Ajouter les noms des pays dans la colonne 'Country'
+tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
 
-# # Visualisation interactive 3D avec Plotly
-# fig = px.scatter_3d(
-#     tsne_df, 
-#     x='TSNE1', 
-#     y='TSNE2', 
-#     z='TSNE3',  # Troisième dimension pour le 3D
-#     hover_name='Country',  # Noms des pays affichés au survol
-#     title='Visualisation t-SNE 3D du jeu de données',
-#     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3', 'Variable': variable_to_color},  # Étiquettes des axes
-#     width=800, height=800,
-#     # color='Variable',  # Utiliser la variable pour la coloration
-#     # color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
-# )
+# Visualisation interactive 3D avec Plotly
+fig = px.scatter_3d(
+    tsne_df, 
+    x='TSNE1', 
+    y='TSNE2', 
+    z='TSNE3',  # Troisième dimension pour le 3D
+    hover_name='Country',  # Noms des pays affichés au survol
+    title='Visualisation t-SNE 3D du jeu de données',
+    labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'TSNE3': 'Dimension 3', 'Variable': variable_to_color},  # Étiquettes des axes
+    width=800, height=800,
+    color='Variable',  # Utiliser la variable pour la coloration
+    color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
+)
 
-# # Afficher le graphique interactif
-# fig.show()
+# Afficher le graphique interactif
+fig.show()
 
 def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation t-SNE 3D des clusters"):
     """
@@ -289,9 +290,9 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     
     fig.show()
 
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_kmeans, labels=index)
+# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_kmeans, labels=index)
 # plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_cah, labels=index)
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_asc_hier, labels=index)
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_GMM, labels=index)
+# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_asc_hier, labels=index)
+# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_GMM, labels=index)
 # plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
-plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_spec, labels=index)
+# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_spec, labels=index)
