@@ -30,11 +30,11 @@ Z=scaler.fit_transform(X)
 # 2.3 Visualisation t-SNE
 # ['child_mortality', 'exports', 'health', 'imports', 'income', 'inflation', 'life_expectation', 'total_fertility', 'GDP']
 
-variable_to_color = 'child_mortality'
+variable_to_color = 'total_fertility'
 
-# # Appliquer t-SNE
-# tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
-# Z_tsne = tsne.fit_transform(Z)
+# Appliquer t-SNE
+tsne = TSNE(n_components=2, perplexity=30, n_iter=1000)
+Z_tsne = tsne.fit_transform(Z)
 
 # Clustering 2D
 
@@ -58,26 +58,26 @@ variable_to_color = 'child_mortality'
 #     print (f'\n Pour k={k}, voici les scores :')
 #     k_means(Z, k, "k-means++", 10, 'lloyd', 100)[1]
 
-# # Créer un DataFrame pour la visualisation avec Plotly
-# tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
-# tsne_df['Country'] = index
-# tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
+# Créer un DataFrame pour la visualisation avec Plotly
+tsne_df = pd.DataFrame(Z_tsne, columns=['TSNE1', 'TSNE2'])
+tsne_df['Country'] = index
+tsne_df['Variable'] = scaler.fit_transform(dataset[[variable_to_color]])  # Ajouter la variable pour la couleur
 
-# # Visualisation interactive avec Plotly
-# fig = px.scatter(
-#     tsne_df, 
-#     x='TSNE1', 
-#     y='TSNE2', 
-#     hover_name='Country',  # Noms des pays affichés au survol
-#     title='Visualisation t-SNE du jeu de données en 2D',
-#     labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'Variable': variable_to_color},  # Étiquettes des axes
-#     width=800, height=600,
-#     color='Variable',  # Utiliser la variable pour la coloration
-#     color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
-# )
+# Visualisation interactive avec Plotly
+fig = px.scatter(
+    tsne_df, 
+    x='TSNE1', 
+    y='TSNE2', 
+    hover_name='Country',  # Noms des pays affichés au survol
+    title='Visualisation t-SNE du jeu de données en 2D',
+    labels={'TSNE1': 'Dimension 1', 'TSNE2': 'Dimension 2', 'Variable': variable_to_color},  # Étiquettes des axes
+    width=800, height=600,
+    color='Variable',  # Utiliser la variable pour la coloration
+    color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
+)
 
-# # Afficher le graphique interactif
-# fig.show()
+# Afficher le graphique interactif
+fig.show()
 
 def plot_clusters_2d_with_legend(data_2d, clusters, labels, title="Visualisation t-SNE 2D des clusters"):
     """
