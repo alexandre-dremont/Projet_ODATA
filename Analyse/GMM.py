@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import time
 from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldin_score
 
+# 3ème méthode de Clustering : modèle de mélange de Gaussiennes
+
 def GMM(X, n_components, covariance_type, n_init, max_iter):
 
     start_time = time.time()

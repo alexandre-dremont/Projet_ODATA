@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import time
 from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldin_score
 
+# 3ème méthode de Clustering : modèle de mélange de Gaussiennes
+
 jain=pd.read_csv("./data/jain.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
 
 aggregation=pd.read_csv("./data/aggregation.txt", sep="\t", names=["1ère caractéristique", "2ème caractéristique", "Résultat"])
