@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import time
 from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldin_score
 
+# 1ère méthode de Clustering : K-means
 
 def k_means(X, n_clusters, init, n_init, algorithm, max_iter):
     

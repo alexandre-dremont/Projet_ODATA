@@ -378,7 +378,6 @@ def affichage():
     # Afficher le graphique interactif
     fig.show()
 
-affichage()
 
 def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation ACP 3D des clusters"):
     """
@@ -457,6 +456,8 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
     
     fig.show()
 
+
+# affichage()
 # K-means
 
 # _,labels_kmeans,__=k_means(proj[:,:3], 17, "k-means++", 10, 'lloyd', 100)
@@ -511,3 +512,18 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
 # K=7 nombres impaires entre 11 et 21
 
 # Calculer les contributions d'une dizaine de pays en besoin aux trois axes
+
+contributions = (proj ** 2) / valeurs_propres
+
+P=['Benin', 'Burundi', 'Central African Republic', 'Chad', 'Congo Dem. Rep.', 'Guinea-Bissau', 'Mali', 'Mauritania', 'Niger', 'Nigeria', 'Sierra Leone']
+
+# print(col)
+
+# for i,e in enumerate(contributions[:,:3]):
+#     if index_data[i] in P:
+#         print(f"Les contributions décroissantes du {index_data[i]} sont {np.argsort(-e)+1}") # [col[f] for f in np.argsort(e)]
+#         print(f"Les valeurs du {index_data[i]} sont : \n {dataset.loc[index_data[i]]}")
+#         print(dataset.describe())
+
+for c in col:
+    print(c, dataset.loc[P].sort_values(c)[c])

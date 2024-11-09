@@ -24,6 +24,8 @@ pca.fit(Z)
 
 proj = pca.transform(Z)
 
+# 5 méthodes de Clustering pré-ACP (sur les données brutes)
+
 # K-means
 
 # _,labels_kmeans,__=k_means(Z, 21, "k-means++", 10, 'lloyd', 100)
