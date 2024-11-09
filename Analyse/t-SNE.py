@@ -28,8 +28,6 @@ scaler=StandardScaler(with_std=True)
 Z=scaler.fit_transform(X)
 
 # 2.3 Visualisation t-SNE
-# ['child_mortality', 'exports', 'health', 'imports', 'income', 'inflation', 'life_expectation', 'total_fertility', 'GDP']
-
 variable_to_color = 'total_fertility'
 
 # Appliquer t-SNE
@@ -38,7 +36,7 @@ Z_tsne = tsne.fit_transform(Z)
 
 # Clustering 2D
 
-# Données brutes corrigées centrées réduites
+# Données brutes corrigées centrées réduites avant le clustering
 # clusters_DBSCAN=DBSCAN_clust(Z, 8) # Il n'existe pas de k faisant converger l'algorithme de manière pertinente
 # clusters_spec=specClust(Z, 15, matrix='nearest_neighbors', KNN=4) # KNN=4 et k=15, 7, 11
 # clusters_asc_hier=CAH(Z, 'ward', 21, 'maxclust') # Plus k est bas, mieux c'est ... ou 21, 19
@@ -46,7 +44,7 @@ Z_tsne = tsne.fit_transform(Z)
 # clusters_GMM=GMM(Z, 21, 'full', 10, 100)[0] # k = 21, 14, 10, 8
 # clusters_kmeans=k_means(Z, 21, "k-means++", 10, 'lloyd', 100)[1] # k=21, 19, 10, 8
 
-# Données passées par t-SNE
+# Données passées par t-SNE avant le clustering
 # clusters_DBSCAN=DBSCAN_clust(Z_tsne, 3) # Le meilleur k est 3 après avoir essayé toutes les possibilités
 # clusters_spec=specClust(Z_tsne, 13, matrix='nearest_neighbors', KNN=4) # KNN=4 et k=13, 7, 17
 # clusters_asc_hier=CAH(Z_tsne, 'ward', 10, 'maxclust') # Plus k est bas, mieux c'est ... 
@@ -54,6 +52,7 @@ Z_tsne = tsne.fit_transform(Z)
 # clusters_GMM=GMM(Z_tsne, 13, 'full', 10, 100)[0] # k = 13
 # clusters_kmeans=k_means(Z_tsne, 11, "k-means++", 10, 'lloyd', 100)[1] # k = 11
 
+# Boncle de test des variables
 # for k in range (2, 25):
 #     print (f'\n Pour k={k}, voici les scores :')
 #     k_means(Z, k, "k-means++", 10, 'lloyd', 100)[1]
@@ -79,26 +78,9 @@ fig = px.scatter(
 # Afficher le graphique interactif
 fig.show()
 
-def plot_clusters_2d_with_legend(data_2d, clusters, labels, title="Visualisation t-SNE 2D des clusters"):
-    """
-    Affiche une visualisation 2D des données projetées et une légende mosaïque avec les points groupés par clusters.
+# Fonction d'affichage des clusters en 2 dimensions
+def plot_clusters_2d(data_2d, clusters, labels, title="Visualisation t-SNE 2D des clusters"):
 
-    Paramètres:
-    -----------
-    data_2d : array-like
-        Tableau numpy ou DataFrame contenant les données projetées en 2D (e.g., résultats de t-SNE).
-    clusters : list ou array
-        Liste ou tableau des identifiants de cluster pour chaque point de données.
-    labels : list
-        Liste des noms des points (par exemple, des pays), pour afficher au survol.
-    title : str, optional
-        Titre du graphique.
-
-    Retour:
-    -------
-    Affiche le graphique interactif 2D avec la légende des clusters.
-    """
-    # Création d'un DataFrame pour la visualisation
     tsne_df = pd.DataFrame(data_2d, columns=['TSNE1', 'TSNE2'])
     tsne_df['Cluster'] = clusters.astype(str)  # Convertir en chaîne pour la couleur catégorielle
     tsne_df['Country'] = labels
@@ -115,10 +97,8 @@ def plot_clusters_2d_with_legend(data_2d, clusters, labels, title="Visualisation
         width=800, height=800
     )
 
-    # Créer un DataFrame groupé par cluster pour la légende
+    # Légende
     clusters_dict = tsne_df.groupby('Cluster')['Country'].apply(list).to_dict()
-    
-    # Formatage de la légende pour chaque cluster
     table_data = []
     for cluster, countries in clusters_dict.items():
         table_data.append(
@@ -131,12 +111,10 @@ def plot_clusters_2d_with_legend(data_2d, clusters, labels, title="Visualisation
         column_widths=[0.7, 0.3],
         specs=[[{"type": "scatter"}, {"type": "table"}]]
     )
-
-    # Ajouter le graphique 2D
     for trace in fig_2d.data:
         fig.add_trace(trace, row=1, col=1)
 
-    # Ajouter la table avec les clusters et pays
+    # Ajouter le tableau avec les clusters et les pays
     fig.add_trace(
         go.Table(
             header=dict(values=["Cluster", "Pays"], align='left', font=dict(size=12)),
@@ -145,23 +123,21 @@ def plot_clusters_2d_with_legend(data_2d, clusters, labels, title="Visualisation
         row=1, col=2
     )
 
-    # Afficher le graphique complet
+    # Afficher le résultat
     fig.update_layout(
         title=title,
         showlegend=False,
         width=1200,
         height=800
     )
-    
     fig.show()
 
-# plot_clusters_2d_with_legend(Z_tsne, clusters=clusters_kmeans, labels=index)
-# plot_clusters_2d_with_legend(Z_tsne, clusters=clusters_cah, labels=index)
-# plot_clusters_2d_with_legend(Z_tsne, clusters=clusters_asc_hier, labels=index)
-# plot_clusters_2d_with_legend(Z_tsne, clusters=clusters_GMM, labels=index)
-# plot_clusters_2d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
-# plot_clusters_2d_with_legend(Z_tsne, clusters=clusters_spec, labels=index)
-
+# plot_clusters_2d(Z_tsne, clusters=clusters_kmeans, labels=index)
+# plot_clusters_2d(Z_tsne, clusters=clusters_cah, labels=index)
+# plot_clusters_2d(Z_tsne, clusters=clusters_asc_hier, labels=index)
+# plot_clusters_2d(Z_tsne, clusters=clusters_GMM, labels=index)
+# plot_clusters_2d(Z_tsne, clusters=clusters_DBSCAN, labels=index)
+# plot_clusters_2d(Z_tsne, clusters=clusters_spec, labels=index)
 
 
 
@@ -171,7 +147,7 @@ Z_tsne = tsne.fit_transform(Z)
 
 # # Clustering 3D
 
-# Données brutes centrées réduites corrigées
+# Données brutes centrées réduites corrigées avant le clustering
 # clusters_DBSCAN=DBSCAN_clust(Z, 8) # Il n'existe pas de k faisant converger l'algorithme de manière pertinente
 # clusters_spec=specClust(Z, 15, matrix='nearest_neighbors', KNN=4) # KNN=4 et k=15, 7, 11
 # clusters_asc_hier=CAH(Z, 'ward', 21, 'maxclust') # Plus k est bas, mieux c'est ... ou 21, 19
@@ -187,6 +163,7 @@ Z_tsne = tsne.fit_transform(Z)
 # clusters_GMM=GMM(Z_tsne, 11, 'full', 10, 100)[0] # k = 6, 3, 11, 5
 # clusters_kmeans=k_means(Z_tsne, 11, "k-means++", 10, 'lloyd', 100)[1] # k=3, 4, 5, 6, 11, 8
 
+# Boncle de test des variables
 # for k in range (2, 12):
 #     print (f'\n Pour k={k}, voici les scores :')
 #     clusters_kmeans=k_means(Z_tsne, k, "k-means++", 10, 'lloyd', 100)[1]
@@ -209,29 +186,11 @@ fig = px.scatter_3d(
     color='Variable',  # Utiliser la variable pour la coloration
     color_continuous_scale='turbo'  # Utilisez 'viridis' ou autre colormap si nécessaire
 )
-
-# Afficher le graphique interactif
 fig.show()
 
-def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation t-SNE 3D des clusters"):
-    """
-    Affiche une visualisation 3D des données projetées et une légende mosaïque avec les pays groupés par clusters.
+# Fonction d'affichage des clusters en 2 dimensions
+def plot_clusters_3d(data_3d, clusters, labels, title="Visualisation t-SNE 3D des clusters"):
 
-    Paramètres:
-    -----------
-    data_3d : array-like
-        Tableau numpy ou DataFrame contenant les données projetées en 3D (e.g., résultats de t-SNE).
-    clusters : list ou array
-        Liste ou tableau des identifiants de cluster pour chaque point de données.
-    labels : list
-        Liste des noms des points (par exemple, des pays), pour afficher au survol.
-    title : str, optional
-        Titre du graphique.
-
-    Retour:
-    -------
-    Affiche le graphique interactif 3D avec la légende des clusters.
-    """
     # Création d'un DataFrame pour la visualisation
     tsne_df = pd.DataFrame(data_3d, columns=['TSNE1', 'TSNE2', 'TSNE3'])
     tsne_df['Cluster'] = clusters.astype(str)  # Convertir en chaîne pour la couleur catégorielle
@@ -250,10 +209,8 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
         width=800, height=800
     )
 
-    # Créer un DataFrame groupé par cluster pour la légende
+    # Légende
     clusters_dict = tsne_df.groupby('Cluster')['Country'].apply(list).to_dict()
-    
-    # Formatage de la légende pour chaque cluster
     table_data = []
     for cluster, countries in clusters_dict.items():
         table_data.append(
@@ -266,8 +223,6 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
         column_widths=[0.7, 0.3],
         specs=[[{"type": "scatter3d"}, {"type": "table"}]]
     )
-
-    # Ajouter le graphique 3D
     for trace in fig_3d.data:
         fig.add_trace(trace, row=1, col=1)
 
@@ -280,19 +235,18 @@ def plot_clusters_3d_with_legend(data_3d, clusters, labels, title="Visualisation
         row=1, col=2
     )
 
-    # Afficher le graphique complet
+    # Afficher le résultat
     fig.update_layout(
         title=title,
         showlegend=False,
         width=1200,
         height=800
-    )
-    
+    ) 
     fig.show()
 
-# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_kmeans, labels=index)
-# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_cah, labels=index)
-# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_asc_hier, labels=index)
-# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_GMM, labels=index)
-# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_DBSCAN, labels=index)
-# plot_clusters_3d_with_legend(Z_tsne, clusters=clusters_spec, labels=index)
+# plot_clusters_3d(Z_tsne, clusters=clusters_kmeans, labels=index)
+# plot_clusters_3d(Z_tsne, clusters=clusters_cah, labels=index)
+# plot_clusters_3d(Z_tsne, clusters=clusters_asc_hier, labels=index)
+# plot_clusters_3d(Z_tsne, clusters=clusters_GMM, labels=index)
+# plot_clusters_3d(Z_tsne, clusters=clusters_DBSCAN, labels=index)
+# plot_clusters_3d(Z_tsne, clusters=clusters_spec, labels=index)
